@@ -45,6 +45,36 @@
         flex-direction: column;
         justify-content: space-between;
         padding: 3.5rem 2rem;
+        position: relative;
+      }
+
+      /* Ambient Glowing Blue Edge Margin Effect */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 999;
+        box-shadow:
+          inset 0 0 0 2px rgba(0, 160, 255, 0.8),
+          inset 0 0 18px 3px rgba(0, 150, 255, 0.45),
+          inset 0 0 45px 8px rgba(0, 130, 255, 0.2);
+        animation: edgePulse 3.5s ease-in-out infinite alternate;
+      }
+
+      @keyframes edgePulse {
+        0% {
+          box-shadow:
+            inset 0 0 0 2px rgba(0, 140, 255, 0.65),
+            inset 0 0 14px 2px rgba(0, 130, 255, 0.35),
+            inset 0 0 35px 5px rgba(0, 120, 255, 0.15);
+        }
+        100% {
+          box-shadow:
+            inset 0 0 0 2.5px rgba(0, 190, 255, 0.95),
+            inset 0 0 24px 5px rgba(0, 170, 255, 0.6),
+            inset 0 0 60px 12px rgba(0, 150, 255, 0.3);
+        }
       }
 
       header {
@@ -183,6 +213,292 @@
           gap: 0.5rem;
         }
       }
+
+      /* Contact Modal Styles */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.25s ease,
+          visibility 0.25s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .modal-card {
+        background-color: var(--bg);
+        border: 1px solid var(--border);
+        width: 100%;
+        max-width: 480px;
+        padding: 2rem 1.85rem;
+        position: relative;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.18);
+        transform: translateY(16px) scale(0.98);
+        transition: transform 0.25s ease;
+        max-height: calc(100vh - 3rem);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #d1d5db transparent;
+      }
+
+      .modal-card::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .modal-card::-webkit-scrollbar-thumb {
+        background-color: #d1d5db;
+        border-radius: 3px;
+      }
+
+      .modal-overlay.active .modal-card {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-title-group h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35rem;
+        color: var(--text);
+      }
+
+      .modal-title-group p {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        line-height: 1.4;
+      }
+
+      .modal-close-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 0.35rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        transition: color 0.15s ease;
+        margin-top: -0.25rem;
+        margin-right: -0.25rem;
+      }
+
+      .modal-close-btn:hover {
+        color: var(--text);
+      }
+
+      .modal-close-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text);
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+
+      .form-group label .required {
+        color: #d9383a;
+      }
+
+      .form-group label .optional-badge {
+        font-size: 0.6875rem;
+        font-weight: 400;
+        text-transform: none;
+        letter-spacing: 0;
+        color: var(--text-muted);
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 0.75rem 0.85rem;
+        font-size: 0.9375rem;
+        font-family: inherit;
+        color: var(--text);
+        background-color: #fafafa;
+        border: 1px solid var(--border);
+        outline: none;
+        transition:
+          border-color 0.15s ease,
+          background-color 0.15s ease,
+          box-shadow 0.15s ease;
+        -webkit-appearance: none;
+        border-radius: 0;
+      }
+
+      .form-control:focus {
+        background-color: #ffffff;
+        border-color: var(--text);
+        box-shadow: 0 0 0 1px var(--text);
+      }
+
+      .form-control::placeholder {
+        color: #999999;
+      }
+
+      textarea.form-control {
+        resize: vertical;
+        min-height: 84px;
+      }
+
+      .form-submit-btn {
+        width: 100%;
+        background-color: var(--btn-bg);
+        color: var(--btn-text);
+        border: 1px solid var(--btn-bg);
+        padding: 0.85rem;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition:
+          opacity 0.15s ease,
+          transform 0.1s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .form-submit-btn:hover:not(:disabled) {
+        opacity: 0.85;
+      }
+
+      .form-submit-btn:active:not(:disabled) {
+        transform: scale(0.99);
+      }
+
+      .form-submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      /* Spinner */
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+        display: none;
+      }
+
+      .form-submit-btn.loading .spinner {
+        display: inline-block;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Alert message */
+      .form-alert {
+        display: none;
+        font-size: 0.8125rem;
+        padding: 0.75rem 0.85rem;
+        margin-bottom: 1rem;
+        border-left: 3px solid;
+      }
+
+      .form-alert.error {
+        display: block;
+        background-color: #fff2f2;
+        border-color: #d9383a;
+        color: #a31c1e;
+      }
+
+      /* Success State */
+      .modal-success {
+        display: none;
+        text-align: center;
+        padding: 1.5rem 0.5rem;
+      }
+
+      .modal-success.active {
+        display: block;
+      }
+
+      .success-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 1.25rem;
+        border: 2px solid var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .success-icon svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--text);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      .modal-success h3 {
+        font-size: 1.375rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+      }
+
+      .modal-success p {
+        font-size: 0.9375rem;
+        color: var(--text-muted);
+        line-height: 1.5;
+        margin-bottom: 1.75rem;
+      }
+
+      @media (max-width: 480px) {
+        .modal-card {
+          padding: 1.75rem 1.25rem;
+        }
+
+        .modal-title-group h2 {
+          font-size: 1.25rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -197,7 +513,9 @@
       <p class="subheading">A strategy consultancy by <b>Norar</b>.</p>
 
       <div class="contact">
-        <a class="contact-btn" href="mailto:client@norar.app">Get in Touch</a>
+        <a class="contact-btn" href="#contact" id="openContactBtn"
+          >Get in Touch</a
+        >
         <span class="contact-email"
           >or email <a href="mailto:client@norar.app">client@norar.app</a></span
         >
@@ -209,8 +527,292 @@
       <div>&copy; <span id="year">2026</span> All rights reserved.</div>
     </footer>
 
+    <!-- Contact Modal Popup -->
+    <div
+      class="modal-overlay"
+      id="contactModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+      tabindex="-1"
+    >
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <h2 id="modalTitle">Get in Touch</h2>
+            <p>Leave your details and we will reach out shortly.</p>
+          </div>
+          <button
+            type="button"
+            class="modal-close-btn"
+            id="closeModalBtn"
+            aria-label="Close modal"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Submission Alert Notice (Errors / Feedback) -->
+        <div id="formAlert" class="form-alert" role="alert"></div>
+
+        <!-- Contact Form -->
+        <form id="contactForm" novalidate>
+          <div class="form-group">
+            <label for="fullName">
+              Full Name <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              class="form-control"
+              placeholder="e.g. Jane Doe"
+              required
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="mobileNumber">
+              Mobile Number <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="tel"
+              id="mobileNumber"
+              name="mobileNumber"
+              class="form-control"
+              placeholder="e.g. +1 555-0199"
+              required
+              autocomplete="tel"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="emailAddress">
+              Email <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="email"
+              id="emailAddress"
+              name="emailAddress"
+              class="form-control"
+              placeholder="e.g. jane@company.com"
+              required
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="details">
+              Details <span class="optional-badge">(optional)</span>
+            </label>
+            <textarea
+              id="details"
+              name="details"
+              class="form-control"
+              rows="3"
+              placeholder="Briefly describe your project or inquiry..."
+            ></textarea>
+          </div>
+
+          <button type="submit" id="submitBtn" class="form-submit-btn">
+            <span class="spinner" aria-hidden="true"></span>
+            <span class="btn-text">Submit Inquiry</span>
+          </button>
+        </form>
+
+        <!-- Success Confirmation View -->
+        <div id="formSuccess" class="modal-success">
+          <div class="success-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+          <h3>Thank you!</h3>
+          <p>
+            We've received your details and will be in touch with you shortly.
+          </p>
+          <button type="button" class="form-submit-btn" id="successCloseBtn">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
+      // Automatically update footer copyright year
       document.getElementById("year").textContent = new Date().getFullYear();
+
+      // ========================================================
+      // GOOGLE APPS SCRIPT CONFIGURATION
+      // Paste your deployed Google Apps Script Web App URL below:
+      // ========================================================
+      const GOOGLE_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbzflwciZq-GPfz6AGJG4-o9YmTUTyGvILZbeLtTPzjmXJ3xHshKuouDiHM3IM7aN3kF/exec";
+
+      // Modal Elements
+      const openContactBtn = document.getElementById("openContactBtn");
+      const closeModalBtn = document.getElementById("closeModalBtn");
+      const successCloseBtn = document.getElementById("successCloseBtn");
+      const contactModal = document.getElementById("contactModal");
+      const contactForm = document.getElementById("contactForm");
+      const formSuccess = document.getElementById("formSuccess");
+      const formAlert = document.getElementById("formAlert");
+      const submitBtn = document.getElementById("submitBtn");
+      const btnText = submitBtn.querySelector(".btn-text");
+
+      // Open Modal
+      function openModal(e) {
+        if (e) e.preventDefault();
+        contactModal.classList.add("active");
+        contactModal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        // Focus first input
+        setTimeout(() => {
+          document.getElementById("fullName").focus();
+        }, 100);
+      }
+
+      // Close Modal
+      function closeModal() {
+        contactModal.classList.remove("active");
+        contactModal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+
+      // Reset form view
+      function resetFormView() {
+        contactForm.reset();
+        contactForm.style.display = "block";
+        formSuccess.classList.remove("active");
+        hideAlert();
+        setLoading(false);
+      }
+
+      // Show/Hide Alert
+      function showAlert(msg) {
+        formAlert.textContent = msg;
+        formAlert.className = "form-alert error";
+      }
+
+      function hideAlert() {
+        formAlert.textContent = "";
+        formAlert.className = "form-alert";
+      }
+
+      // Set Loading State
+      function setLoading(isLoading) {
+        submitBtn.disabled = isLoading;
+        if (isLoading) {
+          submitBtn.classList.add("loading");
+          btnText.textContent = "Submitting...";
+        } else {
+          submitBtn.classList.remove("loading");
+          btnText.textContent = "Submit Inquiry";
+        }
+      }
+
+      // Event Listeners for Modal Toggling
+      openContactBtn.addEventListener("click", openModal);
+      closeModalBtn.addEventListener("click", closeModal);
+      successCloseBtn.addEventListener("click", () => {
+        closeModal();
+        setTimeout(resetFormView, 300);
+      });
+
+      // Close when clicking outside the modal card
+      contactModal.addEventListener("click", (e) => {
+        if (e.target === contactModal) {
+          closeModal();
+        }
+      });
+
+      // Close on Escape key press
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && contactModal.classList.contains("active")) {
+          closeModal();
+        }
+      });
+
+      // Form Submission Handler
+      contactForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hideAlert();
+
+        const fullName = document.getElementById("fullName").value.trim();
+        const mobileNumber = document
+          .getElementById("mobileNumber")
+          .value.trim();
+        const emailAddress = document
+          .getElementById("emailAddress")
+          .value.trim();
+        const details = document.getElementById("details").value.trim();
+
+        // Basic Client Validation
+        if (!fullName || !mobileNumber || !emailAddress) {
+          showAlert("Please fill out all required fields.");
+          return;
+        }
+
+        // Check if URL is configured
+        if (
+          !GOOGLE_SCRIPT_URL ||
+          GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"
+        ) {
+          showAlert(
+            "Google Sheets integration pending: Please configure GOOGLE_SCRIPT_URL in index.html with your deployed Apps Script URL.",
+          );
+          console.warn(
+            "Please follow the Google Apps Script instructions to paste your Web App URL into GOOGLE_SCRIPT_URL.",
+          );
+          return;
+        }
+
+        setLoading(true);
+
+        // Prepare payload as URLSearchParams for maximum Google Apps Script compatibility
+        const formData = new URLSearchParams();
+        formData.append("timestamp", new Date().toISOString());
+        formData.append("fullName", fullName);
+        formData.append("mobileNumber", mobileNumber);
+        formData.append("emailAddress", emailAddress);
+        formData.append("details", details);
+
+        try {
+          // Sending with mode: 'no-cors' allows Google Apps Script Web App 302 redirects
+          // to succeed seamlessly without cross-origin blocking in any browser.
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          // Show success state
+          contactForm.style.display = "none";
+          formSuccess.classList.add("active");
+        } catch (error) {
+          console.error("Submission failed:", error);
+          showAlert(
+            "Something went wrong while sending your message. Please try again or email us directly at client@norar.app.",
+          );
+        } finally {
+          setLoading(false);
+        }
+      });
     </script>
   </body>
 </html>
