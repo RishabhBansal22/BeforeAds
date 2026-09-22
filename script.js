@@ -19,6 +19,123 @@ const formAlert = document.getElementById("formAlert");
 const submitBtn = document.getElementById("submitBtn");
 const btnText = submitBtn.querySelector(".btn-text");
 
+// Form Field Elements
+const fullNameInput = document.getElementById("fullName");
+const fullNameError = document.getElementById("fullNameError");
+const mobileNumberInput = document.getElementById("mobileNumber");
+const mobileNumberError = document.getElementById("mobileNumberError");
+const emailAddressInput = document.getElementById("emailAddress");
+const emailAddressError = document.getElementById("emailAddressError");
+const detailsInput = document.getElementById("details");
+const detailsError = document.getElementById("detailsError");
+
+// Field validation rules
+function validateFullName(value) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "Please enter your full name.";
+  }
+  if (trimmed.length < 2) {
+    return "Name must be at least 2 characters.";
+  }
+  if (!/[a-zA-Z]/.test(trimmed)) {
+    return "Please enter a valid name with letters.";
+  }
+  return null;
+}
+
+function validateMobileNumber(value) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "Please enter your mobile number.";
+  }
+  const digitsOnly = trimmed.replace(/\D/g, "");
+  const phonePattern = /^\+?[0-9\s\-()]{7,20}$/;
+  if (!phonePattern.test(trimmed) || digitsOnly.length < 7 || digitsOnly.length > 15) {
+    return "Please enter a valid mobile number (7 to 15 digits).";
+  }
+  return null;
+}
+
+function validateEmailAddress(value) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return "Please enter your email address.";
+  }
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailPattern.test(trimmed)) {
+    return "Please enter a valid email address (e.g. name@company.com).";
+  }
+  return null;
+}
+
+function validateDetails(value) {
+  const trimmed = value.trim();
+  if (trimmed.length > 2000) {
+    return "Details cannot exceed 2000 characters.";
+  }
+  return null;
+}
+
+const formFields = [
+  { input: fullNameInput, error: fullNameError, validator: validateFullName },
+  { input: mobileNumberInput, error: mobileNumberError, validator: validateMobileNumber },
+  { input: emailAddressInput, error: emailAddressError, validator: validateEmailAddress },
+  { input: detailsInput, error: detailsError, validator: validateDetails },
+];
+
+function setFieldError(inputEl, errorEl, message) {
+  inputEl.classList.add("is-invalid");
+  inputEl.setAttribute("aria-invalid", "true");
+  errorEl.textContent = message;
+  errorEl.classList.add("visible");
+}
+
+function clearFieldError(inputEl, errorEl) {
+  inputEl.classList.remove("is-invalid");
+  inputEl.removeAttribute("aria-invalid");
+  errorEl.textContent = "";
+  errorEl.classList.remove("visible");
+}
+
+function clearAllErrors() {
+  formFields.forEach(({ input, error }) => {
+    clearFieldError(input, error);
+  });
+  hideAlert();
+}
+
+// Attach real-time validation on user input
+formFields.forEach(({ input, error, validator }) => {
+  input.addEventListener("input", () => {
+    if (input.classList.contains("is-invalid")) {
+      const err = validator(input.value);
+      if (!err) {
+        clearFieldError(input, error);
+        // If all errors resolved, hide the general alert banner
+        const anyRemaining = formFields.some((f) => f.input.classList.contains("is-invalid"));
+        if (!anyRemaining) {
+          hideAlert();
+        }
+      } else {
+        setFieldError(input, error, err);
+      }
+    }
+  });
+
+  input.addEventListener("blur", () => {
+    // Validate on blur if the user has already typed something
+    if (input.value.trim().length > 0) {
+      const err = validator(input.value);
+      if (err) {
+        setFieldError(input, error, err);
+      } else {
+        clearFieldError(input, error);
+      }
+    }
+  });
+});
+
 // Open Modal
 function openModal(e) {
   if (e) e.preventDefault();
@@ -27,7 +144,7 @@ function openModal(e) {
   document.body.style.overflow = "hidden";
   // Focus first input
   setTimeout(() => {
-    document.getElementById("fullName").focus();
+    fullNameInput.focus();
   }, 100);
 }
 
@@ -36,14 +153,15 @@ function closeModal() {
   contactModal.classList.remove("active");
   contactModal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
+  clearAllErrors();
 }
 
 // Reset form view
 function resetFormView() {
   contactForm.reset();
+  clearAllErrors();
   contactForm.style.display = "block";
   formSuccess.classList.remove("active");
-  hideAlert();
   setLoading(false);
 }
 
@@ -97,14 +215,27 @@ contactForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   hideAlert();
 
-  const fullName = document.getElementById("fullName").value.trim();
-  const mobileNumber = document.getElementById("mobileNumber").value.trim();
-  const emailAddress = document.getElementById("emailAddress").value.trim();
-  const details = document.getElementById("details").value.trim();
+  let hasErrors = false;
+  let firstInvalidField = null;
 
-  // Basic Client Validation
-  if (!fullName || !mobileNumber || !emailAddress) {
-    showAlert("Please fill out all required fields.");
+  formFields.forEach(({ input, error, validator }) => {
+    const err = validator(input.value);
+    if (err) {
+      setFieldError(input, error, err);
+      hasErrors = true;
+      if (!firstInvalidField) {
+        firstInvalidField = input;
+      }
+    } else {
+      clearFieldError(input, error);
+    }
+  });
+
+  if (hasErrors) {
+    showAlert("Please correct the highlighted fields before submitting.");
+    if (firstInvalidField) {
+      firstInvalidField.focus();
+    }
     return;
   }
 
@@ -121,6 +252,11 @@ contactForm.addEventListener("submit", async (e) => {
     );
     return;
   }
+
+  const fullName = fullNameInput.value.trim();
+  const mobileNumber = mobileNumberInput.value.trim();
+  const emailAddress = emailAddressInput.value.trim();
+  const details = detailsInput.value.trim();
 
   setLoading(true);
 

@@ -362,6 +362,29 @@ textarea.form-control {
   min-height: 84px;
 }
 
+.form-control.is-invalid {
+  border-color: #d9383a;
+  background-color: #fffbfb;
+}
+
+.form-control.is-invalid:focus {
+  border-color: #d9383a;
+  box-shadow: 0 0 0 1px #d9383a;
+}
+
+.field-error {
+  display: none;
+  font-size: 0.75rem;
+  color: #d9383a;
+  margin-top: 0.35rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.field-error.visible {
+  display: block;
+}
+
 .form-submit-btn {
   width: 100%;
   background-color: var(--btn-bg);
